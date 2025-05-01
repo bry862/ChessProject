@@ -284,11 +284,17 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         if (std::cin.fail()){
 
             std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            
+            
+
+            
             //Place holder. I need to figure out how to detemrine if the stack is not emty to we can pop in the first place. 
             if(undo()){
                 
                 std::string player_in_turn = playerOneTurn? "Player 1": "Player 2";
-                return 1;
+                return true;
             }
 
             //No move to undo!

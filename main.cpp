@@ -16,11 +16,15 @@ int main() {
 
     int x= 1;
 
-    // while (x>0){
-    //     board1.attemptRound();
-    // }
+    while (x>0){
+        board1.attemptRound();
+        board1.display();
+    }
 
-    board1.attemptRound();
+
+
+
+
     
     return 0;
 }
