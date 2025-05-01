@@ -286,18 +286,8 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             std::cin.clear();
             //Place holder. I need to figure out how to detemrine if the stack is not emty to we can pop in the first place. 
             if(undo()){
-                // Move move_undone = past_moves_.top();
-                // std::cout<<"YES (" << (move_undone).getOriginalPosition().first <<", "<<(move_undone).getOriginalPosition().second << ") to ("
-                // << (move_undone).getTargetPosition().first << ", " << (move_undone).getTargetPosition().second<<") "<<std::endl;
-                // past_moves_.pop();
-                // if(past_moves_.empty()){
-                //     return 1;
-                // }
-
-
                 
                 std::string player_in_turn = playerOneTurn? "Player 1": "Player 2";
-                display();
                 return 1;
             }
 
@@ -322,13 +312,10 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             if(undo()){
                  
                 std::string player_in_turn = playerOneTurn? "Player 1": "Player 2";
-                display();
-                attemptRound();
                 return 1;
                 
             }
 
-            //No move to undo!
             else{
                 return false;
             }
@@ -351,17 +338,18 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
             //Step 7: Toogle playerOneTurn 
             playerOneTurn = playerOneTurn? 0:1;
+            return 1;
         }
 
         //Move unsucceful
         else {
             std::cout<<"Unable to move piece at ("<<target_piece.first<<", "<<target_piece.second<<") to ("<<target_location.first << ", "<< target_location.second<<")"<<std::endl ;
+            return false;
             
         }
 
-        display();
 
-        attemptRound();
+        
 
         //Debuggin
         // std::cout<<"Testing: <"<< past_moves_.top().getOriginalPosition().first << ", "<<past_moves_.top().getOriginalPosition().second<<"> : <"<< past_moves_.top().getTargetPosition().first<<", "<<past_moves_.top().getTargetPosition().second<<">" <<std::endl;
