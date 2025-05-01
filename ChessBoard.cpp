@@ -247,3 +247,177 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
     
     return true;
 }
+
+        /**
+     * @brief Attempts to execute a round of play on the chessboard. A round consists of the 
+     * following sequence of actions:
+     * 
+     * 1) Prompts the user to select a piece by entering two space-separated integers 
+     *    or type anything else to undo the last move
+     * 2) Records their input, or returns the result of attempting to undo the previous action
+     * 3) Prompt the user to select a target square to move the piece 
+     *    or type anything else to undo.
+     * 4) Records their input, or returns the result of attempting to undo the previous action
+     * 5) Attempt to execute the move, using move()
+     * 6) If the move is successful, records the action by pushing a Move to past_moves_.
+     * 7) If the move OR undo is successful, toggles the `playerOneTurn` boolean member of `ChessBoard`
+     * 
+     * @return Returns true if the round has been completed successfully, that is:
+     *      - If a pieced was succesfully moved.
+     *      - Or a move was successfully undone.
+     * @post The `past_moves_` stack & `playerOneTurn` members are updated as described above
+     */
+    bool ChessBoard:: attemptRound(){
+
+        std::string player_in_turn = playerOneTurn? "Player 1": "Player 2";
+        Square target_piece;
+        Square target_location;
+
+        //Step 1: Select a piece to move
+        std::cout << "[" <<player_in_turn << "]" << "Select a piece (Enter two integers: '<row> <col>'), or any other input to undo the last action." <<std::endl;
+       
+        //Step 2: Record the input
+        std::cin>>target_piece.first;
+        std::cin>>target_piece.second;
+
+        //Undo on the first input
+        if (std::cin.fail()){
+
+            std::cin.clear();
+            //Place holder. I need to figure out how to detemrine if the stack is not emty to we can pop in the first place. 
+            if(undo()){
+                // Move move_undone = past_moves_.top();
+                // std::cout<<"YES (" << (move_undone).getOriginalPosition().first <<", "<<(move_undone).getOriginalPosition().second << ") to ("
+                // << (move_undone).getTargetPosition().first << ", " << (move_undone).getTargetPosition().second<<") "<<std::endl;
+                // past_moves_.pop();
+                // if(past_moves_.empty()){
+                //     return 1;
+                // }
+
+
+                
+                std::string player_in_turn = playerOneTurn? "Player 1": "Player 2";
+                display();
+                return 1;
+            }
+
+            //No move to undo!
+            else{
+                return false;
+            }
+        }
+
+        //Step 3: Place to move to
+        std::cout << "[" <<player_in_turn << "]" << "Specify a square to move to (Enter two integers: '<row> <col>'), or any other input to undo the last action." <<std::endl;
+        
+        //step 4: Record the input
+        std::cin>>target_location.first;
+        std::cin>>target_location.second;
+
+        //undo on the second input
+        if (std::cin.fail()){
+
+            std::cin.clear();
+            //Place holder. I need to figure out how to detemrine if the stack is not emty to we can pop in the first place. 
+            if(undo()){
+                 
+                std::string player_in_turn = playerOneTurn? "Player 1": "Player 2";
+                display();
+                attemptRound();
+                return 1;
+                
+            }
+
+            //No move to undo!
+            else{
+                return false;
+            }
+        }
+
+
+        
+        //step 5: Attempt to move
+        bool vaild_move = move(target_piece.first, target_piece.second, target_location.first, target_location.second);
+        
+        //Step 6: If move is successful 
+        if (vaild_move){
+            
+            std::cout<<"Moved ("<<target_piece.first<<", "<<target_piece.second<<") to ("<<target_location.first << ", "<< target_location.second<<")" <<std::endl;
+
+            //we will make a move object
+            ChessPiece* piece_ptr = board[target_location.first][target_location.second];
+            Move new_move = Move (target_piece, target_location, piece_ptr);
+            past_moves_.push(new_move);
+
+            //Step 7: Toogle playerOneTurn 
+            playerOneTurn = playerOneTurn? 0:1;
+        }
+
+        //Move unsucceful
+        else {
+            std::cout<<"Unable to move piece at ("<<target_piece.first<<", "<<target_piece.second<<") to ("<<target_location.first << ", "<< target_location.second<<")"<<std::endl ;
+            
+        }
+
+        display();
+
+        attemptRound();
+
+        //Debuggin
+        // std::cout<<"Testing: <"<< past_moves_.top().getOriginalPosition().first << ", "<<past_moves_.top().getOriginalPosition().second<<"> : <"<< past_moves_.top().getTargetPosition().first<<", "<<past_moves_.top().getTargetPosition().second<<">" <<std::endl;
+        // past_moves_.pop();
+        // if (past_moves_.empty()){
+        //     std::cout<<"The stack is empty";
+        // }
+    
+    }
+
+    /**
+         * @brief Reverts the most recent action executed by a player,
+         *        if there is a `Move` object in the `past_moves_` stack
+         * 
+         *        This is done by updating the moved piece to its original
+         *        position, and the captured piece (if applicable) to the target
+         *        position specified by the `Move` object at the top of the stack
+         * 
+         * @return True if the action was undone succesfully.
+         *         False otherwise (ie. if there are no moves to undo)
+         * 
+         * @post 1) Reverts the `board` member's pointers to reflect
+         *          the board state before the most recent move, if possible. 
+         *       2) Updates the row / col members of each involved `ChessPiece` 
+         *          (ie. the moved & captured pieces) to match their reverted 
+         *          positions on the board
+         *       3) The most recent `Move` object is removed from the `past_moves_`
+         *          stack 
+         */ 
+    bool ChessBoard:: undo(){
+
+        if (past_moves_.empty()){
+            return false;
+        }
+        //First, move the piece back to where it was
+        Move previous_move = past_moves_.top();
+
+        //Print to confirm the move will be done
+        std::cout<<"YES (" << (previous_move).getOriginalPosition().first <<", "<<(previous_move).getOriginalPosition().second << ") to ("
+        << (previous_move).getTargetPosition().first << ", " << (previous_move).getTargetPosition().second<<") "<<std::endl;
+
+        //Manually move
+        board[previous_move.getOriginalPosition().first][previous_move.getOriginalPosition().second] = board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second];
+        
+        //Yes, I made it empty. If there was a captured it will be added later
+        board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second] = nullptr; 
+        
+        if ( previous_move.getCapturedPiece()){
+            board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second] = previous_move.getCapturedPiece();
+        }
+
+        //Always pop
+        past_moves_.pop();
+
+
+
+        return true;
+
+    }

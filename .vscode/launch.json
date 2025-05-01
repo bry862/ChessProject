@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/brayhan/Desktop/Classes/235_Code/6project/p6-bry862",
+      "program": "/Users/brayhan/Desktop/Classes/235_Code/6project/p6-bry862/build/Debug/outDebug"
+    }
+  ]
+}
