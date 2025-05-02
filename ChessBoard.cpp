@@ -332,7 +332,8 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
         
         //step 5: Attempt to move
-        ChessPiece* piece_ptr = board[target_location.first][target_location.second];
+        ChessPiece* captured_piece_ptr = board[target_location.first][target_location.second];
+        ChessPiece * moved_piece_ptr = board[target_piece.first][target_piece.second];
         bool vaild_move = move(target_piece.first, target_piece.second, target_location.first, target_location.second);
         
         //Step 6: If move is successful 
@@ -342,7 +343,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
             //we will make a move object
             
-            Move new_move = Move (target_piece, target_location, board[target_location.first][target_location.second],piece_ptr);
+            Move new_move = Move (target_piece, target_location, moved_piece_ptr,captured_piece_ptr);
             past_moves_.push(new_move);
 
             //Debuggin
