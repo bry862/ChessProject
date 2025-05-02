@@ -294,7 +294,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             if(undo()){
                 
                 playerOneTurn = playerOneTurn? false:true;
-                std::cout<<"AFTER UNDO, Player in turn: "<<player_in_turn<<std::endl;
+        
                 return true;
             }
 
@@ -332,6 +332,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
         
         //step 5: Attempt to move
+        ChessPiece* piece_ptr = board[target_location.first][target_location.second];
         bool vaild_move = move(target_piece.first, target_piece.second, target_location.first, target_location.second);
         
         //Step 6: If move is successful 
@@ -340,9 +341,15 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             std::cout<<"Moved ("<<target_piece.first<<", "<<target_piece.second<<") to ("<<target_location.first << ", "<< target_location.second<<")" <<std::endl;
 
             //we will make a move object
-            ChessPiece* piece_ptr = board[target_location.first][target_location.second];
-            Move new_move = Move (target_piece, target_location, piece_ptr);
+            
+            Move new_move = Move (target_piece, target_location, board[target_location.first][target_location.second],piece_ptr);
             past_moves_.push(new_move);
+
+            //Debuggin
+            std::cout<<"Testing: <"<< past_moves_.top().getOriginalPosition().first << ", "<<past_moves_.top().getOriginalPosition().second<<"> : <"<< past_moves_.top().getTargetPosition().first<<", "<<past_moves_.top().getTargetPosition().second<<">" <<std::endl;
+            if (past_moves_.empty()){
+                std::cout<<"The stack is empty" <<std::endl;
+            }
 
             //Step 7: Toogle playerOneTurn 
             playerOneTurn = playerOneTurn? 0:1;
@@ -359,12 +366,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
         
 
-        //Debuggin
-        // std::cout<<"Testing: <"<< past_moves_.top().getOriginalPosition().first << ", "<<past_moves_.top().getOriginalPosition().second<<"> : <"<< past_moves_.top().getTargetPosition().first<<", "<<past_moves_.top().getTargetPosition().second<<">" <<std::endl;
-        // past_moves_.pop();
-        // if (past_moves_.empty()){
-        //     std::cout<<"The stack is empty";
-        // }
+
     
     }
 
