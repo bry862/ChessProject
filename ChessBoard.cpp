@@ -332,8 +332,17 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
         
         //step 5: Attempt to move
-        ChessPiece* captured_piece_ptr = board[target_location.first][target_location.second];
-        ChessPiece * moved_piece_ptr = board[target_piece.first][target_piece.second];
+        
+        ChessPiece* captured_piece_ptr = nullptr;
+        if (board[target_location.first][target_location.second]){
+            //Ensure no segmentation fault
+            captured_piece_ptr = board[target_location.first][target_location.second];
+        }
+        
+        ChessPiece * moved_piece_ptr = nullptr;
+        if (board[target_piece.first][target_piece.second]){
+            moved_piece_ptr = board[target_piece.first][target_piece.second];
+        }
         bool vaild_move = move(target_piece.first, target_piece.second, target_location.first, target_location.second);
         
         //Step 6: If move is successful 
