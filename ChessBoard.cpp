@@ -399,14 +399,19 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         std::cout<<"YES (" << (previous_move).getOriginalPosition().first <<", "<<(previous_move).getOriginalPosition().second << ") to ("
         << (previous_move).getTargetPosition().first << ", " << (previous_move).getTargetPosition().second<<") "<<std::endl;
 
-        //Manually move
+        //Manually move the piece back
+
         board[previous_move.getOriginalPosition().first][previous_move.getOriginalPosition().second] = board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second];
-        
+        board[previous_move.getOriginalPosition().first][previous_move.getOriginalPosition().second]->setRow(previous_move.getOriginalPosition().first);
+        board[previous_move.getOriginalPosition().first][previous_move.getOriginalPosition().second] ->setColumn(previous_move.getOriginalPosition().second);
+
         //Yes, I made it empty. If there was a captured it will be added later
         board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second] = nullptr; 
         
-        if ( previous_move.getCapturedPiece()){
+        if ( previous_move.getCapturedPiece() ){
             board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second] = previous_move.getCapturedPiece();
+            board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second]->setRow(previous_move.getTargetPosition().first);
+            board [previous_move.getTargetPosition().first][previous_move.getTargetPosition().second]-> setColumn(previous_move.getTargetPosition().second);
         }
 
         //Always pop
