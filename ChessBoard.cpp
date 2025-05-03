@@ -248,7 +248,8 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
     return true;
 }
 
-        /**
+
+/**
      * @brief Attempts to execute a round of play on the chessboard. A round consists of the 
      * following sequence of actions:
      * 
@@ -280,18 +281,20 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         std::cin>>target_piece.first;
         std::cin>>target_piece.second;
 
-        
-        
         //Undo on the first input
         if (std::cin.fail()){
 
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+            
+
+            
+            //Place holder. I need to figure out how to detemrine if the stack is not emty to we can pop in the first place. 
             if(undo()){
                 
                 playerOneTurn = playerOneTurn? false:true;
-        
+                std::cout<<"AFTER UNDO, Player in turn: "<<player_in_turn<<std::endl;
                 return true;
             }
 
@@ -306,14 +309,13 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
             return false;
         }
+
         //Step 3: Place to move to
         std::cout << "[" <<player_in_turn << "]" << "Specify a square to move to (Enter two integers: '<row> <col>'), or any other input to undo the last action." <<std::endl;
         
         //step 4: Record the input
         std::cin>>target_location.first;
         std::cin>>target_location.second;
-
-       
 
         //undo on the second input
         if (std::cin.fail()){
@@ -338,8 +340,11 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
             return false;
         }
+
+
         
         //step 5: Attempt to move
+
         ChessPiece* captured_piece_ptr = nullptr;
         if (board[target_location.first][target_location.second]){
             //Ensure no segmentation fault
@@ -351,6 +356,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         if (board[target_piece.first][target_piece.second]){
             moved_piece_ptr = board[target_piece.first][target_piece.second];
         }
+
         bool vaild_move = move(target_piece.first, target_piece.second, target_location.first, target_location.second);
         
         //Step 6: If move is successful 
@@ -359,28 +365,12 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             std::cout<<"Moved ("<<target_piece.first<<", "<<target_piece.second<<") to ("<<target_location.first << ", "<< target_location.second<<")" <<std::endl;
 
             //we will make a move object
-            
-            Move new_move = Move (target_piece, target_location, moved_piece_ptr,captured_piece_ptr);
+            ChessPiece* piece_ptr = board[target_location.first][target_location.second];
+            Move new_move = Move (target_piece, target_location, moved_piece_ptr, captured_piece_ptr);
             past_moves_.push(new_move);
 
-            //Debuggin
-            // std::cout<<"Testing: <"<< past_moves_.top().getOriginalPosition().first << ", "<<past_moves_.top().getOriginalPosition().second<<"> : <"<< past_moves_.top().getTargetPosition().first<<", "<<past_moves_.top().getTargetPosition().second<<">" <<std::endl;
-            // if (past_moves_.empty()){
-            //     std::cout<<"The stack is empty" <<std::endl;
-            // }
-
-            std::cout<<"Testing: Started at ("<< new_move.getOriginalPosition().first<<", "<<new_move.getOriginalPosition().second<<") to (" << new_move.getTargetPosition().first <<", "<< new_move.getTargetPosition().second <<"). The moved piece: " <<new_move.getMovedPiece();
-            
-            if (captured_piece_ptr){
-                std::cout<<" Captured piece: "<<captured_piece_ptr->getType() <<std::endl;
-            }
-
-            else{
-                std::cout<<" Captured piece: None"<<std::endl;
-            }
-
             //Step 7: Toogle playerOneTurn 
-            playerOneTurn = playerOneTurn? 0:1;
+            playerOneTurn = playerOneTurn? false: true;
             return true;
         }
 
@@ -394,7 +384,12 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
         
 
-
+        //Debuggin
+        // std::cout<<"Testing: <"<< past_moves_.top().getOriginalPosition().first << ", "<<past_moves_.top().getOriginalPosition().second<<"> : <"<< past_moves_.top().getTargetPosition().first<<", "<<past_moves_.top().getTargetPosition().second<<">" <<std::endl;
+        // past_moves_.pop();
+        // if (past_moves_.empty()){
+        //     std::cout<<"The stack is empty";
+        // }
     
     }
 

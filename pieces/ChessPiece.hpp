@@ -70,7 +70,7 @@ class ChessPiece {
    ChessPiece(const std::string& color, const int& row = -1, const int& col = -1, const bool& movingUp = false, const int& size = 0, const std::string& type="NONE");
 
    //I had to add this because ChessBoard was deleting ChessPiece* whiel there was no ChessPiece destructors. 
-   virtual ~ChessPiece() = default;
+   //virtual ~ChessPiece() = default;
    // =============== Getters and Setters ===============
 
    /**

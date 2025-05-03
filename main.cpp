@@ -17,7 +17,9 @@ int main() {
     int x= 1;
 
     while (x>0){
-        board1.attemptRound();
+        
+        bool flag = board1.attemptRound();
+        std::cout<<"TEST from MAIN, return was: " <<flag <<std::endl;
         board1.display();
     }
 
