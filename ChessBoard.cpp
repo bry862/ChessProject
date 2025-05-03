@@ -280,24 +280,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         std::cin>>target_piece.first;
         std::cin>>target_piece.second;
 
-        //debug: 
-        // std::cout<<"Test, target piece: (" <<target_piece.first <<", "<< target_piece.second <<")"<<std::endl;
-        // return true;
-
-        // if (board[target_piece.first][target_piece.second]){
-        //     std::cout<<"Point 1!!" <<std::endl;
-        //     return true;
-        // }
-
-        // if (!board[target_piece.first][target_piece.second]){
-        //     std::cout<<"Point 2!!"<<std::endl;
-        //     return true;
-        // }
-
-        if(target_piece.first >= BOARD_LENGTH || target_piece.second >= BOARD_LENGTH){
-            std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
-            return false;
-        }
+        
         
         //Undo on the first input
         if (std::cin.fail()){
@@ -318,6 +301,11 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             }
         }
 
+        //Bound check
+        if(target_piece.first >= BOARD_LENGTH || target_piece.second >= BOARD_LENGTH){
+            std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
+            return false;
+        }
         //Step 3: Place to move to
         std::cout << "[" <<player_in_turn << "]" << "Specify a square to move to (Enter two integers: '<row> <col>'), or any other input to undo the last action." <<std::endl;
         
@@ -325,10 +313,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         std::cin>>target_location.first;
         std::cin>>target_location.second;
 
-        if(target_location.first >= BOARD_LENGTH || target_location.second >= BOARD_LENGTH){
-            std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
-            return false;
-        }
+       
 
         //undo on the second input
         if (std::cin.fail()){
@@ -348,7 +333,11 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             }
         }
 
-
+        //Bound check
+        if(target_location.first >= BOARD_LENGTH || target_location.second >= BOARD_LENGTH){
+            std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
+            return false;
+        }
         
         //step 5: Attempt to move
         ChessPiece* captured_piece_ptr = nullptr;
