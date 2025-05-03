@@ -305,9 +305,10 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         }
 
         //Bound check
+        bool valid_target = true;
         if(target_piece.first >= BOARD_LENGTH || target_piece.first <0 || target_piece.second >= BOARD_LENGTH || target_piece.second < 0) {
             std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
-            return false;
+            valid_target = false;
         }
 
         //Step 3: Place to move to
@@ -335,32 +336,38 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             }
         }
 
+
         //Bound check
+        bool valid_location = true;
         if(target_location.first >= BOARD_LENGTH || target_location.first < 0 || target_location.second >= BOARD_LENGTH || target_location.second < 0){
             std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
-            return false;
+            valid_location = false;
         }
 
 
         
         //step 5: Attempt to move
 
+
         ChessPiece* captured_piece_ptr = nullptr;
-        if (board[target_location.first][target_location.second]){
+        if (valid_target && valid_location && board[target_location.first][target_location.second]){
             //Ensure no segmentation fault
              
             captured_piece_ptr = board[target_location.first][target_location.second];
         }
 
         ChessPiece * moved_piece_ptr = nullptr;
-        if (board[target_piece.first][target_piece.second]){
+        if (valid_target && valid_location && board[target_piece.first][target_piece.second]){
             moved_piece_ptr = board[target_piece.first][target_piece.second];
         }
 
-        bool vaild_move = move(target_piece.first, target_piece.second, target_location.first, target_location.second);
+        bool valid_move = false;
+        if (valid_target && valid_location){
+            valid_move = move(target_piece.first, target_piece.second, target_location.first, target_location.second);
+        }
         
         //Step 6: If move is successful 
-        if (vaild_move){
+        if (valid_move){
             
             std::cout<<"Moved ("<<target_piece.first<<", "<<target_piece.second<<") to ("<<target_location.first << ", "<< target_location.second<<")" <<std::endl;
 
