@@ -305,7 +305,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         }
 
         //Bound check
-        if(target_piece.first >= BOARD_LENGTH || target_piece.second >= BOARD_LENGTH){
+        if(target_piece.first >= BOARD_LENGTH || target_piece.first <0 || target_piece.second >= BOARD_LENGTH || target_piece.second < 0) {
             std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
             return false;
         }
@@ -336,7 +336,7 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         }
 
         //Bound check
-        if(target_location.first >= BOARD_LENGTH || target_location.second >= BOARD_LENGTH){
+        if(target_location.first >= BOARD_LENGTH || target_location.first < 0 || target_location.second >= BOARD_LENGTH || target_location.second < 0){
             std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
             return false;
         }
@@ -365,7 +365,6 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             std::cout<<"Moved ("<<target_piece.first<<", "<<target_piece.second<<") to ("<<target_location.first << ", "<< target_location.second<<")" <<std::endl;
 
             //we will make a move object
-            ChessPiece* piece_ptr = board[target_location.first][target_location.second];
             Move new_move = Move (target_piece, target_location, moved_piece_ptr, captured_piece_ptr);
             past_moves_.push(new_move);
 
