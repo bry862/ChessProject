@@ -280,17 +280,31 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         std::cin>>target_piece.first;
         std::cin>>target_piece.second;
 
+        //debug: 
+        // std::cout<<"Test, target piece: (" <<target_piece.first <<", "<< target_piece.second <<")"<<std::endl;
+        // return true;
+
+        // if (board[target_piece.first][target_piece.second]){
+        //     std::cout<<"Point 1!!" <<std::endl;
+        //     return true;
+        // }
+
+        // if (!board[target_piece.first][target_piece.second]){
+        //     std::cout<<"Point 2!!"<<std::endl;
+        //     return true;
+        // }
+
+        if(target_piece.first >= BOARD_LENGTH || target_piece.second >= BOARD_LENGTH){
+            std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
+            return false;
+        }
+        
         //Undo on the first input
         if (std::cin.fail()){
 
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-            
-            
-
-            
-            //Place holder. I need to figure out how to detemrine if the stack is not emty to we can pop in the first place. 
             if(undo()){
                 
                 playerOneTurn = playerOneTurn? false:true;
@@ -310,6 +324,11 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
         //step 4: Record the input
         std::cin>>target_location.first;
         std::cin>>target_location.second;
+
+        if(target_location.first >= BOARD_LENGTH || target_location.second >= BOARD_LENGTH){
+            std::cout<<"Wrong Bounds, Board size mismatch"<<std::endl;
+            return false;
+        }
 
         //undo on the second input
         if (std::cin.fail()){
@@ -332,10 +351,10 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
 
         
         //step 5: Attempt to move
-        
         ChessPiece* captured_piece_ptr = nullptr;
         if (board[target_location.first][target_location.second]){
             //Ensure no segmentation fault
+             
             captured_piece_ptr = board[target_location.first][target_location.second];
         }
 
@@ -360,6 +379,16 @@ bool ChessBoard::move(const int& row, const int& col, const int& new_row, const 
             // if (past_moves_.empty()){
             //     std::cout<<"The stack is empty" <<std::endl;
             // }
+
+            std::cout<<"Testing: Started at ("<< new_move.getOriginalPosition().first<<", "<<new_move.getOriginalPosition().second<<") to (" << new_move.getTargetPosition().first <<", "<< new_move.getTargetPosition().second <<"). The moved piece: " <<new_move.getMovedPiece();
+            
+            if (captured_piece_ptr){
+                std::cout<<" Captured piece: "<<captured_piece_ptr->getType() <<std::endl;
+            }
+
+            else{
+                std::cout<<" Captured piece: None"<<std::endl;
+            }
 
             //Step 7: Toogle playerOneTurn 
             playerOneTurn = playerOneTurn? 0:1;

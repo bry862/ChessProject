@@ -21,10 +21,5 @@ int main() {
         board1.display();
     }
 
-
-
-
-
-    
     return 0;
 }
